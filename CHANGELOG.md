@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.4.0] - 2026-08-07
+
+### Added
+- **⏩ 1-Click Task Deadline Snooze & Rescheduling (`TaskCenter.jsx`)**:
+  - **1-Click "+1 Day" Button**: Added `⏩ +1 Day` quick button on task cards to instantly push duties to tomorrow.
+  - **Inline Due Date Editor**: Editable date picker on task cards to change deadline target dates on the fly.
+  - **Bulk Overdue Reschedule Banner**: Surface 1-click banner when overdue duties exist (`⏩ Push All Overdue to Today`).
+
+---
+
 ## [1.3.0] - 2026-08-07
 
 ### Added

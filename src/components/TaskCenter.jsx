@@ -97,6 +97,38 @@ export default function TaskCenter({ tasks, setTasks }) {
     setNewSubtaskText(prev => ({ ...prev, [taskId]: '' }));
   };
 
+  // Push a single task's due date to tomorrow or +1 day
+  const handlePushTaskTomorrow = (taskId) => {
+    setTasks(prev => prev.map(t => {
+      if (t.id === taskId) {
+        let baseDate = new Date();
+        if (t.dueDate && t.dueDate > todayStr) {
+          baseDate = new Date(t.dueDate + 'T00:00:00');
+        }
+        baseDate.setDate(baseDate.getDate() + 1);
+        const nextDateStr = baseDate.toISOString().split('T')[0];
+        return { ...t, dueDate: nextDateStr };
+      }
+      return t;
+    }));
+  };
+
+  // Modify task due date to custom selected date
+  const handleUpdateTaskDueDate = (taskId, newDateStr) => {
+    if (!newDateStr) return;
+    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, dueDate: newDateStr } : t));
+  };
+
+  // Bulk push all overdue tasks to today's date
+  const handlePushAllOverdueToToday = () => {
+    setTasks(prev => prev.map(t => {
+      if (t.dueDate && t.dueDate < todayStr && !t.completed) {
+        return { ...t, dueDate: todayStr };
+      }
+      return t;
+    }));
+  };
+
   const [showCompletedArchive, setShowCompletedArchive] = useState(true);
 
   // Filter tasks based on selected tab
@@ -177,12 +209,30 @@ export default function TaskCenter({ tasks, setTasks }) {
                   {task.priority.toUpperCase()}
                 </span>
 
-                {task.dueDate && (
-                  <span className={`flex items-center text-[10px] px-2 py-0.5 rounded-full border border-white/10 ${deadlineBadge}`}>
+                {/* Deadline Badge & Date Editor */}
+                <div className="flex items-center space-x-1.5">
+                  <div className={`flex items-center text-[10px] px-2.5 py-0.5 rounded-full border border-white/10 ${deadlineBadge}`}>
                     {isOverdue ? <AlertTriangle className="w-3 h-3 mr-1 text-rose-400" /> : <CalendarIcon className="w-3 h-3 mr-1 text-cyan-400 opacity-70" />}
-                    {isOverdue ? `Overdue (${task.dueDate})` : isDueToday ? 'Due Today' : `Due: ${task.dueDate}`}
-                  </span>
-                )}
+                    <input
+                      type="date"
+                      value={task.dueDate || todayStr}
+                      onChange={(e) => handleUpdateTaskDueDate(task.id, e.target.value)}
+                      className="bg-transparent text-[10px] text-inherit focus:outline-none font-mono cursor-pointer"
+                      title="Click to modify due date"
+                    />
+                  </div>
+
+                  {!task.completed && (
+                    <button
+                      type="button"
+                      onClick={() => handlePushTaskTomorrow(task.id)}
+                      className="px-2 py-0.5 rounded-full bg-slate-900/90 border border-white/10 hover:border-cyan-500/40 text-cyan-300 hover:text-white text-[10px] font-mono font-semibold transition-all shadow-[0_0_10px_rgba(0,243,255,0.15)]"
+                      title="Push task to tomorrow (+1 Day)"
+                    >
+                      ⏩ +1 Day
+                    </button>
+                  )}
+                </div>
 
                 {task.recurring !== 'None' && (
                   <span className="flex items-center text-amber-300 font-mono text-[10px]">
@@ -270,6 +320,8 @@ export default function TaskCenter({ tasks, setTasks }) {
       </div>
     );
   };
+
+  const overdueTasksCount = tasks.filter(t => t.dueDate && t.dueDate < todayStr && !t.completed).length;
 
   return (
     <div className="space-y-6">
@@ -379,6 +431,25 @@ export default function TaskCenter({ tasks, setTasks }) {
           <span>Add Duty</span>
         </button>
       </form>
+
+      {/* Bulk Reschedule Banner if Overdue Tasks Exist */}
+      {overdueTasksCount > 0 && (
+        <div className="glass-panel p-3.5 rounded-2xl border border-rose-500/40 bg-rose-950/30 flex flex-wrap items-center justify-between gap-3 animate-in fade-in">
+          <div className="flex items-center space-x-2 text-rose-300 text-xs font-mono">
+            <AlertTriangle className="w-4 h-4 text-rose-400 animate-pulse shrink-0" />
+            <span>
+              <strong>{overdueTasksCount}</strong> overdue duty {overdueTasksCount === 1 ? 'item' : 'items'} requiring reschedule
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={handlePushAllOverdueToToday}
+            className="px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-200 border border-rose-500/50 hover:bg-rose-500/30 text-xs font-bold font-mono transition-all shadow-[0_0_10px_rgba(244,63,94,0.3)]"
+          >
+            ⏩ Push All Overdue to Today
+          </button>
+        </div>
+      )}
 
       {/* Filter Tabs */}
       {viewMode === 'list' && (
