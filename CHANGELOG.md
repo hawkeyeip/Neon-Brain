@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] - 2026-08-07
+
+### Added
+- **🔔 Configurable Push Notifications & Reminders (`notificationService.js`, `NotificationSettingsModal.jsx`)**:
+  - Native browser desktop/mobile OS push notification engine.
+  - **Cyber Audio Chimes**: Web Audio API futuristic sound effects for alert notifications (with 1-tap mute toggle).
+  - **Memory Refresh Engine**: Surfaces random notes, execution strategies, or AI prompts at custom intervals (*Every 1 hr*, *Every 3 hrs*, *Daily*) to keep key ideas fresh in your mind.
+  - Test Notification & Test Memory Flash buttons.
+  - Added glowing Bell icon button in `Navbar`.
+
+---
+
 ## [1.1.0] - 2026-08-07
 
 ### Added

@@ -7,6 +7,7 @@ import PromptVault from './components/PromptVault';
 import WatchCompanionView from './components/WatchCompanionView';
 import QuickCaptureModal from './components/QuickCaptureModal';
 import DataBackupModal from './components/DataBackupModal';
+import NotificationSettingsModal from './components/NotificationSettingsModal';
 import { getInitialData, saveLocalStore } from './services/db';
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
   const [deviceMode, setDeviceMode] = useState('desktop'); // desktop, tablet, mobile, watch
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false);
   const [isBackupModalOpen, setIsBackupModalOpen] = useState(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
 
   // Load persistent local data
   const initial = getInitialData();
@@ -74,6 +76,7 @@ export default function App() {
         setDeviceMode={setDeviceMode}
         onOpenQuickCapture={() => setIsQuickCaptureOpen(true)}
         onOpenBackupModal={() => setIsBackupModalOpen(true)}
+        onOpenNotificationModal={() => setIsNotificationModalOpen(true)}
       />
 
       {/* Main App Workspace */}
@@ -133,6 +136,14 @@ export default function App() {
         isOpen={isBackupModalOpen}
         onClose={() => setIsBackupModalOpen(false)}
         onImportSuccess={refreshData}
+      />
+
+      {/* Push Notification & Reminder Settings Modal */}
+      <NotificationSettingsModal
+        isOpen={isNotificationModalOpen}
+        onClose={() => setIsNotificationModalOpen(false)}
+        notes={notes}
+        prompts={prompts}
       />
 
     </div>

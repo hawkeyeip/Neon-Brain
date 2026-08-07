@@ -9,7 +9,8 @@ import {
   Smartphone, 
   Tablet, 
   Monitor, 
-  Download
+  Download,
+  Bell
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -18,7 +19,8 @@ export default function Navbar({
   deviceMode, 
   setDeviceMode,
   onOpenQuickCapture,
-  onOpenBackupModal
+  onOpenBackupModal,
+  onOpenNotificationModal
 }) {
   const navTabs = [
     { id: 'brain', label: 'Second Brain', icon: Brain, color: 'text-cyan-400' },
@@ -98,6 +100,16 @@ export default function Navbar({
             <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-cyan-950/80 rounded border border-cyan-500/30 text-cyan-300">
               ⌘K
             </kbd>
+          </button>
+
+          {/* Notification Settings Button */}
+          <button
+            onClick={onOpenNotificationModal}
+            className="p-2 rounded-xl bg-slate-800/70 border border-white/10 hover:border-cyan-500/40 text-slate-300 hover:text-cyan-300 transition-colors relative"
+            title="Push Notifications & Reminders"
+          >
+            <Bell className="w-4 h-4" />
+            <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
           </button>
 
           {/* Backup / Export Button */}
