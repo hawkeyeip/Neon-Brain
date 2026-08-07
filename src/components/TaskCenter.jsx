@@ -5,24 +5,28 @@ import {
   Clock, 
   AlertTriangle, 
   CheckCircle2, 
-  Calendar, 
+  Calendar as CalendarIcon, 
   Repeat, 
   Trash2, 
   ChevronDown, 
   ChevronRight,
-  ListTodo
+  ListTodo,
+  LayoutList
 } from 'lucide-react';
+import TaskCalendarView from './TaskCalendarView';
 
 export default function TaskCenter({ tasks, setTasks }) {
+  const todayStr = new Date().toISOString().split('T')[0];
+
   const [filter, setFilter] = useState('All');
+  const [viewMode, setViewMode] = useState('list'); // list, calendar
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState('medium');
   const [newTaskCategory, setNewTaskCategory] = useState('Duties');
+  const [newTaskDueDate, setNewTaskDueDate] = useState(todayStr);
   const [newTaskRecurring, setNewTaskRecurring] = useState('None');
   const [expandedTaskId, setExpandedTaskId] = useState(null);
   const [newSubtaskText, setNewSubtaskText] = useState({});
-
-  const todayStr = new Date().toISOString().split('T')[0];
 
   const handleToggleTask = (id) => {
     setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
@@ -41,7 +45,7 @@ export default function TaskCenter({ tasks, setTasks }) {
       title: newTaskTitle.trim(),
       priority: newTaskPriority,
       category: newTaskCategory,
-      dueDate: todayStr,
+      dueDate: newTaskDueDate || todayStr,
       completed: false,
       recurring: newTaskRecurring,
       subtasks: [],
@@ -124,6 +128,15 @@ export default function TaskCenter({ tasks, setTasks }) {
     const subtasks = task.subtasks || [];
     const completedSubs = subtasks.filter(s => s.completed).length;
 
+    const isOverdue = task.dueDate && task.dueDate < todayStr && !task.completed;
+    const isDueToday = task.dueDate && task.dueDate === todayStr && !task.completed;
+
+    const deadlineBadge = isOverdue
+      ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse font-bold'
+      : isDueToday
+      ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold'
+      : 'bg-slate-900/80 text-slate-300 border-white/5 font-mono';
+
     const priorityBadge = 
       task.priority === 'high' 
         ? 'bg-pink-500/10 text-pink-400 border-pink-500/30 glow-border-magenta' 
@@ -159,10 +172,17 @@ export default function TaskCenter({ tasks, setTasks }) {
                 {task.title}
               </span>
 
-              <div className="flex items-center space-x-3 text-[11px] text-slate-400 mt-1">
+              <div className="flex items-center space-x-3 text-[11px] text-slate-400 mt-1 flex-wrap gap-y-1">
                 <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono border ${priorityBadge}`}>
                   {task.priority.toUpperCase()}
                 </span>
+
+                {task.dueDate && (
+                  <span className={`flex items-center text-[10px] px-2 py-0.5 rounded-full border border-white/10 ${deadlineBadge}`}>
+                    {isOverdue ? <AlertTriangle className="w-3 h-3 mr-1 text-rose-400" /> : <CalendarIcon className="w-3 h-3 mr-1 text-cyan-400 opacity-70" />}
+                    {isOverdue ? `Overdue (${task.dueDate})` : isDueToday ? 'Due Today' : `Due: ${task.dueDate}`}
+                  </span>
+                )}
 
                 {task.recurring !== 'None' && (
                   <span className="flex items-center text-amber-300 font-mono text-[10px]">
@@ -266,17 +286,45 @@ export default function TaskCenter({ tasks, setTasks }) {
           </p>
         </div>
 
-        {/* Progress Bar Container */}
-        <div className="w-full md:w-64 bg-slate-900/80 p-3 rounded-xl border border-white/10">
-          <div className="flex justify-between items-center text-xs font-mono mb-1.5">
-            <span className="text-slate-400">Completion</span>
-            <span className="text-emerald-400 font-bold">{progressPct}%</span>
+        {/* View Mode Switcher: List vs Calendar */}
+        <div className="flex items-center space-x-3">
+          <div className="flex items-center bg-slate-900/80 p-1 rounded-xl border border-white/10 text-xs text-slate-400">
+            <button
+              onClick={() => setViewMode('list')}
+              className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg transition-all ${
+                viewMode === 'list'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold'
+                  : 'hover:text-white'
+              }`}
+            >
+              <LayoutList className="w-3.5 h-3.5" />
+              <span>Duty List</span>
+            </button>
+            <button
+              onClick={() => setViewMode('calendar')}
+              className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg transition-all ${
+                viewMode === 'calendar'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold'
+                  : 'hover:text-white'
+              }`}
+            >
+              <CalendarIcon className="w-3.5 h-3.5" />
+              <span>Calendar Timeline</span>
+            </button>
           </div>
-          <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-white/5">
-            <div
-              className="bg-gradient-to-r from-emerald-500 via-cyan-400 to-pink-500 h-full transition-all duration-300 shadow-[0_0_10px_rgba(0,255,157,0.5)]"
-              style={{ width: `${progressPct}%` }}
-            />
+
+          {/* Progress Bar Container */}
+          <div className="hidden sm:block w-48 bg-slate-900/80 p-2.5 rounded-xl border border-white/10">
+            <div className="flex justify-between items-center text-xs font-mono mb-1">
+              <span className="text-slate-400">Completion</span>
+              <span className="text-emerald-400 font-bold">{progressPct}%</span>
+            </div>
+            <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden border border-white/5">
+              <div
+                className="bg-gradient-to-r from-emerald-500 via-cyan-400 to-pink-500 h-full transition-all duration-300"
+                style={{ width: `${progressPct}%` }}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -290,6 +338,17 @@ export default function TaskCenter({ tasks, setTasks }) {
           onChange={(e) => setNewTaskTitle(e.target.value)}
           className="flex-1 min-w-[200px] bg-slate-900/80 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-emerald-500/60"
         />
+
+        {/* Target Deadline Date Picker */}
+        <div className="flex items-center space-x-1 bg-slate-900/80 border border-white/10 rounded-xl px-3 py-2 text-xs">
+          <CalendarIcon className="w-3.5 h-3.5 text-cyan-400" />
+          <input
+            type="date"
+            value={newTaskDueDate}
+            onChange={(e) => setNewTaskDueDate(e.target.value)}
+            className="bg-transparent text-xs text-slate-200 focus:outline-none font-mono"
+          />
+        </div>
 
         <select
           value={newTaskPriority}
@@ -322,75 +381,88 @@ export default function TaskCenter({ tasks, setTasks }) {
       </form>
 
       {/* Filter Tabs */}
-      <div className="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none">
-        {['All', 'Today', 'Upcoming', 'High Priority', 'Completed'].map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-              filter === f
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/60 shadow-[0_0_12px_rgba(0,255,157,0.2)]'
-                : 'bg-slate-900/60 text-slate-400 border border-white/10 hover:text-slate-200'
-            }`}
-          >
-            {f}
-          </button>
-        ))}
-      </div>
-
-      {/* Task List */}
-      {/* Task Lists */}
-      {filteredTasks.length === 0 ? (
-        <div className="glass-panel p-12 text-center rounded-2xl border-dashed border-white/10">
-          <ListTodo className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-          <h3 className="text-base font-semibold text-slate-300">No tasks found</h3>
-          <p className="text-xs text-slate-500 mt-1">All clear! Add a new duty above to track your schedule.</p>
+      {viewMode === 'list' && (
+        <div className="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none">
+          {['All', 'Today', 'Upcoming', 'High Priority', 'Completed'].map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                filter === f
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/60 shadow-[0_0_12px_rgba(0,255,157,0.2)]'
+                  : 'bg-slate-900/60 text-slate-400 border border-white/10 hover:text-slate-200'
+              }`}
+            >
+              {f}
+            </button>
+          ))}
         </div>
+      )}
+
+      {/* Main View: Calendar vs Duty List */}
+      {viewMode === 'calendar' ? (
+        <TaskCalendarView
+          tasks={tasks}
+          onToggleTask={handleToggleTask}
+          onSelectDate={(dateStr) => {
+            setNewTaskDueDate(dateStr);
+          }}
+        />
       ) : (
-        <div className="space-y-6">
-          
-          {/* Active Uncompleted Tasks */}
-          {activeTasks.length > 0 && (
-            <div className="space-y-3">
-              <div className="text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wider px-1">
-                Active Focus Duties ({activeTasks.length})
-              </div>
-              {activeTasks.map((task) => renderTaskCard(task))}
+        <>
+          {filteredTasks.length === 0 ? (
+            <div className="glass-panel p-12 text-center rounded-2xl border-dashed border-white/10">
+              <ListTodo className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+              <h3 className="text-base font-semibold text-slate-300">No tasks found</h3>
+              <p className="text-xs text-slate-500 mt-1">All clear! Add a new duty above to track your schedule.</p>
             </div>
-          )}
-
-          {activeTasks.length === 0 && completedTasks.length > 0 && (
-            <div className="glass-panel p-6 text-center rounded-2xl border-dashed border-emerald-500/30">
-              <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2 animate-bounce" />
-              <h3 className="text-sm font-bold text-emerald-300">All Active Duties Completed! 🎉</h3>
-              <p className="text-xs text-slate-400 mt-0.5">Your list is clean. See historical records below.</p>
-            </div>
-          )}
-
-          {/* Collapsible Completed Duties Archive at Bottom */}
-          {completedTasks.length > 0 && (
-            <div className="pt-4 border-t border-white/10 space-y-3">
-              <button
-                onClick={() => setShowCompletedArchive(!showCompletedArchive)}
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-white/10 hover:border-emerald-500/30 transition-colors text-xs text-slate-400 font-mono"
-              >
-                <div className="flex items-center space-x-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 opacity-70" />
-                  <span className="font-bold text-slate-300">Completed Duties Archive ({completedTasks.length})</span>
-                  <span className="text-[10px] text-slate-500 font-sans">(Click to untoggle or verify records)</span>
-                </div>
-                {showCompletedArchive ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-              </button>
-
-              {showCompletedArchive && (
-                <div className="space-y-2 opacity-80 animate-in fade-in duration-150">
-                  {completedTasks.map((task) => renderTaskCard(task))}
+          ) : (
+            <div className="space-y-6">
+              
+              {/* Active Uncompleted Tasks */}
+              {activeTasks.length > 0 && (
+                <div className="space-y-3">
+                  <div className="text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wider px-1">
+                    Active Focus Duties ({activeTasks.length})
+                  </div>
+                  {activeTasks.map((task) => renderTaskCard(task))}
                 </div>
               )}
+
+              {activeTasks.length === 0 && completedTasks.length > 0 && (
+                <div className="glass-panel p-6 text-center rounded-2xl border-dashed border-emerald-500/30">
+                  <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2 animate-bounce" />
+                  <h3 className="text-sm font-bold text-emerald-300">All Active Duties Completed! 🎉</h3>
+                  <p className="text-xs text-slate-400 mt-0.5">Your list is clean. See historical records below.</p>
+                </div>
+              )}
+
+              {/* Collapsible Completed Duties Archive at Bottom */}
+              {completedTasks.length > 0 && (
+                <div className="pt-4 border-t border-white/10 space-y-3">
+                  <button
+                    onClick={() => setShowCompletedArchive(!showCompletedArchive)}
+                    className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-white/10 hover:border-emerald-500/30 transition-colors text-xs text-slate-400 font-mono"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 opacity-70" />
+                      <span className="font-bold text-slate-300">Completed Duties Archive ({completedTasks.length})</span>
+                      <span className="text-[10px] text-slate-500 font-sans">(Click to untoggle or verify records)</span>
+                    </div>
+                    {showCompletedArchive ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                  </button>
+
+                  {showCompletedArchive && (
+                    <div className="space-y-2 opacity-80 animate-in fade-in duration-150">
+                      {completedTasks.map((task) => renderTaskCard(task))}
+                    </div>
+                  )}
+                </div>
+              )}
+
             </div>
           )}
-
-        </div>
+        </>
       )}
 
     </div>

@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.3.0] - 2026-08-07
+
+### Added
+- **📅 Graphical Calendar Timeline View (`TaskCalendarView.jsx`)**:
+  - Interactive Month & Day grid view displaying duty deadlines visually.
+  - Priority color pills (`🔴 High`, `🔵 Medium`, `🟢 Low`) on date cells.
+  - Click any date cell to filter duties or set quick deadline target dates.
+  - Month navigation controls (*◀ Prev Month*, *Next Month ▶*, *Today*).
+- **Target Deadline Picker & Badges**:
+  - Added target date selector to quick duty creation form.
+  - Added deadline status badges on task cards (`⚠️ Overdue`, `📅 Due Today`, `📅 Due: YYYY-MM-DD`).
+  - Animated glowing red pulse alerts for overdue tasks.
+
+---
+
 ## [1.2.2] - 2026-08-07
 
 ### Added & Fixed
