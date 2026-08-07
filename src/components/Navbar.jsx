@@ -55,7 +55,22 @@ export default function Navbar({
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => {
+                  if (tab.id === 'watch') {
+                    if (activeTab === 'watch') {
+                      setActiveTab('brain');
+                      setDeviceMode('desktop');
+                    } else {
+                      setActiveTab('watch');
+                      setDeviceMode('watch');
+                    }
+                  } else {
+                    setActiveTab(tab.id);
+                    if (deviceMode === 'watch') {
+                      setDeviceMode('desktop');
+                    }
+                  }
+                }}
                 className={`flex items-center space-x-2 px-3 py-2 sm:px-4 sm:py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 ${
                   isActive
                     ? 'bg-slate-800 text-white border border-cyan-500/50 shadow-[0_0_15px_rgba(0,243,255,0.25)]'
@@ -97,21 +112,30 @@ export default function Navbar({
           {/* Device Simulator Toggle (Desktop / Tablet / Phone / Watch) */}
           <div className="hidden lg:flex items-center bg-slate-900/80 p-1 rounded-xl border border-white/10 text-slate-400 text-xs">
             <button
-              onClick={() => setDeviceMode('desktop')}
+              onClick={() => {
+                setDeviceMode('desktop');
+                if (activeTab === 'watch') setActiveTab('brain');
+              }}
               className={`p-1.5 rounded-lg transition-colors ${deviceMode === 'desktop' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' : 'hover:text-white'}`}
               title="Desktop View"
             >
               <Monitor className="w-4 h-4" />
             </button>
             <button
-              onClick={() => setDeviceMode('tablet')}
+              onClick={() => {
+                setDeviceMode('tablet');
+                if (activeTab === 'watch') setActiveTab('brain');
+              }}
               className={`p-1.5 rounded-lg transition-colors ${deviceMode === 'tablet' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' : 'hover:text-white'}`}
               title="Tablet View"
             >
               <Tablet className="w-4 h-4" />
             </button>
             <button
-              onClick={() => setDeviceMode('mobile')}
+              onClick={() => {
+                setDeviceMode('mobile');
+                if (activeTab === 'watch') setActiveTab('brain');
+              }}
               className={`p-1.5 rounded-lg transition-colors ${deviceMode === 'mobile' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40' : 'hover:text-white'}`}
               title="Mobile View"
             >
@@ -119,11 +143,16 @@ export default function Navbar({
             </button>
             <button
               onClick={() => {
-                setDeviceMode('watch');
-                setActiveTab('watch');
+                if (deviceMode === 'watch') {
+                  setDeviceMode('desktop');
+                  setActiveTab('brain');
+                } else {
+                  setDeviceMode('watch');
+                  setActiveTab('watch');
+                }
               }}
               className={`p-1.5 rounded-lg transition-colors ${deviceMode === 'watch' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'hover:text-white'}`}
-              title="Watch Simulator View"
+              title="Toggle Watch Mode"
             >
               <Watch className="w-4 h-4" />
             </button>

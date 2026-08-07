@@ -10,10 +10,11 @@ import {
   Copy, 
   Check, 
   Clock,
-  BatteryCharging
+  BatteryCharging,
+  ArrowLeft
 } from 'lucide-react';
 
-export default function WatchCompanionView({ tasks, setTasks, notes, setNotes, prompts }) {
+export default function WatchCompanionView({ tasks, setTasks, notes, setNotes, prompts, onExitWatchMode }) {
   const [activeWatchTab, setActiveWatchTab] = useState('tasks'); // tasks, record, prompt
   const [timeStr, setTimeStr] = useState('');
   const [micActive, setMicActive] = useState(false);
@@ -208,11 +209,23 @@ export default function WatchCompanionView({ tasks, setTasks, notes, setNotes, p
 
       </div>
 
-      <div className="mt-6 text-center max-w-sm">
-        <h4 className="text-sm font-bold text-slate-200">Smartwatch Companion Mode</h4>
-        <p className="text-xs text-slate-400 mt-1">
-          Simulates watch display touch interaction, instant voice dictation capture, and 1-tap duty checkoff.
-        </p>
+      <div className="mt-6 text-center max-w-sm space-y-3">
+        <div>
+          <h4 className="text-sm font-bold text-slate-200">Smartwatch Companion Mode</h4>
+          <p className="text-xs text-slate-400 mt-1">
+            Simulates watch display touch interaction, instant voice dictation capture, and 1-tap duty checkoff.
+          </p>
+        </div>
+
+        {onExitWatchMode && (
+          <button
+            onClick={onExitWatchMode}
+            className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-slate-900/90 border border-amber-500/40 text-amber-300 hover:text-white hover:bg-amber-500/20 text-xs font-semibold shadow-[0_0_15px_rgba(245,158,11,0.2)] transition-all"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Exit Watch Mode</span>
+          </button>
+        )}
       </div>
 
     </div>

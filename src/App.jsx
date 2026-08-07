@@ -108,6 +108,10 @@ export default function App() {
             notes={notes}
             setNotes={setNotes}
             prompts={prompts}
+            onExitWatchMode={() => {
+              setActiveTab('brain');
+              setDeviceMode('desktop');
+            }}
           />
         )}
 

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.0.1] - 2026-08-07
+
+### Fixed
+- **Watch Mode Navigation Lock**: Fixed bug where toggling Watch Mode prevented navigating back to Desktop views.
+- Added explicit "Exit Watch Mode" action button in `WatchCompanionView`.
+- Updated `Navbar` tab switching logic to automatically exit Watch Mode when selecting any main tab (Second Brain, Task Center, AI Prompts).
+
+---
+
 ## [1.0.0] - 2026-08-07
 
 ### Added
