@@ -83,6 +83,8 @@ export default function App() {
           <ThoughtVault
             notes={notes}
             setNotes={setNotes}
+            tasks={tasks}
+            prompts={prompts}
             onNewNote={() => setIsQuickCaptureOpen(true)}
           />
         )}

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2026-08-07
+
+### Added
+- **🕸️ Neural Knowledge Graph View (`KnowledgeGraph.jsx`)**:
+  - Interactive force-directed neural node visualization connecting notes, tasks, and AI prompts.
+  - Interactive physics canvas with drag-and-drop node physics, link attraction, and smooth 60fps rendering.
+  - Hover tooltips, zoom controls (+ / - / reset), and click-to-inspect node drawer.
+  - Integrated View Switcher (*Card Deck* ↔ *Neural Graph*) in Second Brain.
+
+---
+
 ## [1.0.2] - 2026-08-07
 
 ### Fixed & Enhanced
