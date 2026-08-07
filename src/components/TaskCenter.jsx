@@ -83,16 +83,153 @@ export default function TaskCenter({ tasks, setTasks }) {
     setNewSubtaskText(prev => ({ ...prev, [taskId]: '' }));
   };
 
+  const [showCompletedArchive, setShowCompletedArchive] = useState(true);
+
+  // Filter tasks based on selected tab
   const filteredTasks = tasks.filter((t) => {
-    if (filter === 'Today') return t.dueDate === todayStr && !t.completed;
-    if (filter === 'High Priority') return t.priority === 'high' && !t.completed;
+    if (filter === 'Today') return t.dueDate === todayStr;
+    if (filter === 'High Priority') return t.priority === 'high';
     if (filter === 'Completed') return t.completed;
     if (filter === 'Upcoming') return !t.completed;
     return true;
   });
 
+  // Priority weight map: High (1), Medium (2), Low (3)
+  const priorityWeight = { high: 1, medium: 2, low: 3 };
+
+  // Separate active vs completed tasks
+  const activeTasks = filteredTasks
+    .filter(t => !t.completed)
+    .sort((a, b) => (priorityWeight[a.priority] || 2) - (priorityWeight[b.priority] || 2));
+
+  const completedTasks = filteredTasks
+    .filter(t => t.completed)
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
   const completedCount = tasks.filter(t => t.completed).length;
   const progressPct = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
+
+  const renderTaskCard = (task) => {
+    const isExpanded = expandedTaskId === task.id;
+    const subtasks = task.subtasks || [];
+    const completedSubs = subtasks.filter(s => s.completed).length;
+
+    const priorityBadge = 
+      task.priority === 'high' 
+        ? 'bg-pink-500/10 text-pink-400 border-pink-500/30 glow-border-magenta' 
+        : task.priority === 'medium'
+        ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30'
+        : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+
+    return (
+      <div
+        key={task.id}
+        className={`glass-card p-4 rounded-2xl transition-all border ${
+          task.completed ? 'opacity-55 border-white/5 bg-slate-950/40' : 'border-white/10 hover:border-emerald-500/40'
+        }`}
+      >
+        <div className="flex items-center justify-between gap-3">
+          
+          {/* Left Checkbox & Info */}
+          <div className="flex items-center space-x-3 min-w-0 flex-1">
+            <button
+              onClick={() => handleToggleTask(task.id)}
+              className={`w-5 h-5 rounded-lg border flex items-center justify-center transition-all ${
+                task.completed
+                  ? 'bg-emerald-500 border-emerald-400 text-black shadow-[0_0_10px_rgba(0,255,157,0.6)]'
+                  : 'border-white/30 hover:border-emerald-400 bg-slate-900/60'
+              }`}
+              title={task.completed ? 'Mark incomplete (restore to active)' : 'Mark completed'}
+            >
+              {task.completed && <CheckCircle2 className="w-4 h-4 text-slate-950 font-bold" />}
+            </button>
+
+            <div className="min-w-0 flex-1">
+              <span className={`text-sm font-medium block truncate ${task.completed ? 'line-through text-slate-400' : 'text-slate-100'}`}>
+                {task.title}
+              </span>
+
+              <div className="flex items-center space-x-3 text-[11px] text-slate-400 mt-1">
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono border ${priorityBadge}`}>
+                  {task.priority.toUpperCase()}
+                </span>
+
+                {task.recurring !== 'None' && (
+                  <span className="flex items-center text-amber-300 font-mono text-[10px]">
+                    <Repeat className="w-3 h-3 mr-1" />
+                    {task.recurring}
+                  </span>
+                )}
+
+                {subtasks.length > 0 && (
+                  <span className="text-slate-400 font-mono text-[10px]">
+                    Subtasks: {completedSubs}/{subtasks.length}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Actions */}
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setExpandedTaskId(isExpanded ? null : task.id)}
+              className="p-1.5 text-slate-400 hover:text-cyan-400 rounded-lg bg-slate-900/60 border border-white/5"
+              title="Toggle subtasks"
+            >
+              {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+            </button>
+
+            <button
+              onClick={() => handleDeleteTask(task.id)}
+              className="p-1.5 text-slate-500 hover:text-rose-400 rounded-lg hover:bg-slate-900/60"
+              title="Delete task record"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Expanded Subtask Section */}
+        {isExpanded && (
+          <div className="mt-4 pt-3 border-t border-white/10 space-y-2 pl-8">
+            {subtasks.map((sub) => (
+              <div key={sub.id} className="flex items-center space-x-2 text-xs">
+                <input
+                  type="checkbox"
+                  checked={sub.completed}
+                  onChange={() => handleToggleSubtask(task.id, sub.id)}
+                  className="rounded border-white/20 accent-emerald-400"
+                />
+                <span className={sub.completed ? 'line-through text-slate-500' : 'text-slate-200'}>
+                  {sub.title}
+                </span>
+              </div>
+            ))}
+
+            <div className="flex items-center space-x-2 pt-2">
+              <input
+                type="text"
+                placeholder="Add subtask..."
+                value={newSubtaskText[task.id] || ''}
+                onChange={(e) => setNewSubtaskText({ ...newSubtaskText, [task.id]: e.target.value })}
+                onKeyDown={(e) => e.key === 'Enter' && handleAddSubtask(task.id)}
+                className="bg-slate-900/90 border border-white/10 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 flex-1"
+              />
+              <button
+                type="button"
+                onClick={() => handleAddSubtask(task.id)}
+                className="px-2.5 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded-lg text-xs font-medium"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        )}
+
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -182,6 +319,7 @@ export default function TaskCenter({ tasks, setTasks }) {
       </div>
 
       {/* Task List */}
+      {/* Task Lists */}
       {filteredTasks.length === 0 ? (
         <div className="glass-panel p-12 text-center rounded-2xl border-dashed border-white/10">
           <ListTodo className="w-12 h-12 text-slate-600 mx-auto mb-3" />
@@ -189,127 +327,49 @@ export default function TaskCenter({ tasks, setTasks }) {
           <p className="text-xs text-slate-500 mt-1">All clear! Add a new duty above to track your schedule.</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {filteredTasks.map((task) => {
-            const isExpanded = expandedTaskId === task.id;
-            const subtasks = task.subtasks || [];
-            const completedSubs = subtasks.filter(s => s.completed).length;
-
-            const priorityBadge = 
-              task.priority === 'high' 
-                ? 'bg-pink-500/10 text-pink-400 border-pink-500/30 glow-border-magenta' 
-                : task.priority === 'medium'
-                ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30'
-                : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
-
-            return (
-              <div
-                key={task.id}
-                className={`glass-card p-4 rounded-2xl transition-all border ${
-                  task.completed ? 'opacity-60 border-white/5' : 'border-white/10 hover:border-emerald-500/40'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  
-                  {/* Left Checkbox & Info */}
-                  <div className="flex items-center space-x-3 min-w-0 flex-1">
-                    <button
-                      onClick={() => handleToggleTask(task.id)}
-                      className={`w-5 h-5 rounded-lg border flex items-center justify-center transition-all ${
-                        task.completed
-                          ? 'bg-emerald-500 border-emerald-400 text-black shadow-[0_0_10px_rgba(0,255,157,0.6)]'
-                          : 'border-white/30 hover:border-emerald-400 bg-slate-900/60'
-                      }`}
-                    >
-                      {task.completed && <CheckCircle2 className="w-4 h-4 text-slate-950 font-bold" />}
-                    </button>
-
-                    <div className="min-w-0 flex-1">
-                      <span className={`text-sm font-medium block truncate ${task.completed ? 'line-through text-slate-400' : 'text-slate-100'}`}>
-                        {task.title}
-                      </span>
-
-                      <div className="flex items-center space-x-3 text-[11px] text-slate-400 mt-1">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono border ${priorityBadge}`}>
-                          {task.priority.toUpperCase()}
-                        </span>
-
-                        {task.recurring !== 'None' && (
-                          <span className="flex items-center text-amber-300 font-mono text-[10px]">
-                            <Repeat className="w-3 h-3 mr-1" />
-                            {task.recurring}
-                          </span>
-                        )}
-
-                        {subtasks.length > 0 && (
-                          <span className="text-slate-400 font-mono text-[10px]">
-                            Subtasks: {completedSubs}/{subtasks.length}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Actions */}
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => setExpandedTaskId(isExpanded ? null : task.id)}
-                      className="p-1.5 text-slate-400 hover:text-cyan-400 rounded-lg bg-slate-900/60 border border-white/5"
-                      title="Toggle subtasks"
-                    >
-                      {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-                    </button>
-
-                    <button
-                      onClick={() => handleDeleteTask(task.id)}
-                      className="p-1.5 text-slate-500 hover:text-rose-400 rounded-lg hover:bg-slate-900/60"
-                      title="Delete task"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Expanded Subtask Section */}
-                {isExpanded && (
-                  <div className="mt-4 pt-3 border-t border-white/10 space-y-2 pl-8">
-                    {subtasks.map((sub) => (
-                      <div key={sub.id} className="flex items-center space-x-2 text-xs">
-                        <input
-                          type="checkbox"
-                          checked={sub.completed}
-                          onChange={() => handleToggleSubtask(task.id, sub.id)}
-                          className="rounded border-white/20 accent-emerald-400"
-                        />
-                        <span className={sub.completed ? 'line-through text-slate-500' : 'text-slate-200'}>
-                          {sub.title}
-                        </span>
-                      </div>
-                    ))}
-
-                    <div className="flex items-center space-x-2 pt-2">
-                      <input
-                        type="text"
-                        placeholder="Add subtask..."
-                        value={newSubtaskText[task.id] || ''}
-                        onChange={(e) => setNewSubtaskText({ ...newSubtaskText, [task.id]: e.target.value })}
-                        onKeyDown={(e) => e.key === 'Enter' && handleAddSubtask(task.id)}
-                        className="bg-slate-900/90 border border-white/10 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-cyan-500 flex-1"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleAddSubtask(task.id)}
-                        className="px-2.5 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded-lg text-xs font-medium"
-                      >
-                        Add
-                      </button>
-                    </div>
-                  </div>
-                )}
-
+        <div className="space-y-6">
+          
+          {/* Active Uncompleted Tasks */}
+          {activeTasks.length > 0 && (
+            <div className="space-y-3">
+              <div className="text-[11px] font-mono text-cyan-400 font-bold uppercase tracking-wider px-1">
+                Active Focus Duties ({activeTasks.length})
               </div>
-            );
-          })}
+              {activeTasks.map((task) => renderTaskCard(task))}
+            </div>
+          )}
+
+          {activeTasks.length === 0 && completedTasks.length > 0 && (
+            <div className="glass-panel p-6 text-center rounded-2xl border-dashed border-emerald-500/30">
+              <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2 animate-bounce" />
+              <h3 className="text-sm font-bold text-emerald-300">All Active Duties Completed! 🎉</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Your list is clean. See historical records below.</p>
+            </div>
+          )}
+
+          {/* Collapsible Completed Duties Archive at Bottom */}
+          {completedTasks.length > 0 && (
+            <div className="pt-4 border-t border-white/10 space-y-3">
+              <button
+                onClick={() => setShowCompletedArchive(!showCompletedArchive)}
+                className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-white/10 hover:border-emerald-500/30 transition-colors text-xs text-slate-400 font-mono"
+              >
+                <div className="flex items-center space-x-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 opacity-70" />
+                  <span className="font-bold text-slate-300">Completed Duties Archive ({completedTasks.length})</span>
+                  <span className="text-[10px] text-slate-500 font-sans">(Click to untoggle or verify records)</span>
+                </div>
+                {showCompletedArchive ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+              </button>
+
+              {showCompletedArchive && (
+                <div className="space-y-2 opacity-80 animate-in fade-in duration-150">
+                  {completedTasks.map((task) => renderTaskCard(task))}
+                </div>
+              )}
+            </div>
+          )}
+
         </div>
       )}
 

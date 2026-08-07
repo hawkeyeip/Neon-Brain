@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.1] - 2026-08-07
+
+### Added & Fixed
+- **Smart Duty Sorting & Historical Archive (`TaskCenter.jsx`)**:
+  - Automatically moves completed tasks to the bottom of the list into a dedicated, collapsible **Completed Duties Archive** section.
+  - Keeps active task list 100% clean and sorted by priority (*High* -> *Medium* -> *Low*).
+  - Preserves 100% of historical completion records for verification without needing deletion.
+  - Allows 1-click unchecking to instantly restore accidentally completed tasks back into active priority focus.
+
+---
+
 ## [1.2.0] - 2026-08-07
 
 ### Added
