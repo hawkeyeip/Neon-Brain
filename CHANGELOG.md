@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.0.1] - 2026-08-07
+
+### Preserved
+- **💼 Career Vault Retained (`CareerVault.jsx`)**: Kept Career Vault active and accessible within the Resource Hub sub-navigation tabs as requested.
+
+---
+
 ## [2.0.0] - 2026-08-07
 
 ### Major Release - 100% Resource Tracker & Career Vault Integration
