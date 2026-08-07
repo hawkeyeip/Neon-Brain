@@ -64,6 +64,16 @@ export default function TaskCenter({ tasks, setTasks }) {
     }));
   };
 
+  const handleDeleteSubtask = (taskId, subtaskId) => {
+    setTasks(prev => prev.map(task => {
+      if (task.id === taskId) {
+        const updatedSubs = (task.subtasks || []).filter(s => s.id !== subtaskId);
+        return { ...task, subtasks: updatedSubs };
+      }
+      return task;
+    }));
+  };
+
   const handleAddSubtask = (taskId) => {
     const text = newSubtaskText[taskId];
     if (!text || !text.trim()) return;
@@ -194,16 +204,26 @@ export default function TaskCenter({ tasks, setTasks }) {
         {isExpanded && (
           <div className="mt-4 pt-3 border-t border-white/10 space-y-2 pl-8">
             {subtasks.map((sub) => (
-              <div key={sub.id} className="flex items-center space-x-2 text-xs">
-                <input
-                  type="checkbox"
-                  checked={sub.completed}
-                  onChange={() => handleToggleSubtask(task.id, sub.id)}
-                  className="rounded border-white/20 accent-emerald-400"
-                />
-                <span className={sub.completed ? 'line-through text-slate-500' : 'text-slate-200'}>
-                  {sub.title}
-                </span>
+              <div key={sub.id} className="flex items-center justify-between group/sub text-xs py-0.5">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={sub.completed}
+                    onChange={() => handleToggleSubtask(task.id, sub.id)}
+                    className="rounded border-white/20 accent-emerald-400"
+                  />
+                  <span className={sub.completed ? 'line-through text-slate-500' : 'text-slate-200'}>
+                    {sub.title}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteSubtask(task.id, sub.id)}
+                  className="p-1 text-slate-500 hover:text-rose-400 opacity-0 group-hover/sub:opacity-100 transition-opacity rounded"
+                  title="Delete subtask"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </button>
               </div>
             ))}
 

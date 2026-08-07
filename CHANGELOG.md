@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.2] - 2026-08-07
+
+### Added & Fixed
+- **Subtask Deletion (`TaskCenter.jsx`)**: Added hover trash action to remove accidental additions made to individual subtasks without deleting the parent duty.
+
+---
+
 ## [1.2.1] - 2026-08-07
 
 ### Added & Fixed
