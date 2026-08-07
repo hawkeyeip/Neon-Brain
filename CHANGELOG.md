@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.0.0] - 2026-08-07
+
+### Major Release - 100% Resource Tracker & Career Vault Integration
+- **💳 Full Resource & Subscription Master Hub (`ResourceTracker.jsx`)**:
+  - Integrated 100% of the standalone Resource Tracker components and sub-modules without compromise.
+  - **`DashboardStats.jsx`**: Financial analytics, monthly run-rate ($/mo), annual run-rate ($/yr), travel credit balances, category breakdown charts, and business tax write-offs.
+  - **`ResourceList.jsx`**: Grid, Table, and Compact List views with status filters (active, expiring soon, expired/used) and search.
+  - **`CalendarView.jsx`**: Dedicated graphical subscription renewal and credit expiration calendar.
+  - **`ResourceForm.jsx`**: Full resource editor with custom attributes, coupon codes, serials, purchase dates, warranty info, payment methods, and tax write-off toggles.
+  - **💼 `CareerVault.jsx`**: Full Career, Job Applications, Resumes, Portfolio, & Interview Command Center.
+  - **📊 `ImportWizard.jsx`**: Multi-format CSV / JSON importer wizard with automated column mapping.
+  - **🚀 `OnboardingWizard.jsx` & `UserGuide.jsx`**: Guided setup and built-in interactive documentation.
+
+---
+
 ## [1.5.0] - 2026-08-07
 
 ### Added
