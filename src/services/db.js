@@ -4,8 +4,60 @@ const STORAGE_KEYS = {
   NOTES: 'neon_brain_notes_v1',
   TASKS: 'neon_brain_tasks_v1',
   PROMPTS: 'neon_brain_prompts_v1',
+  RESOURCES: 'neon_brain_resources_v1',
   SETTINGS: 'neon_brain_settings_v1',
 };
+
+const DEFAULT_RESOURCES = [
+  {
+    id: 'res-1',
+    title: 'ChatGPT Plus & API',
+    category: 'Subscriptions',
+    cost: 20.00,
+    billingCycle: 'Monthly',
+    renewalDate: new Date(Date.now() + 86400000 * 5).toISOString().split('T')[0],
+    autoRenew: true,
+    businessDeductible: true,
+    tags: ['ai', 'saas', 'monthly'],
+    notes: 'Pro plan for GPT-4o access & custom GPTs.'
+  },
+  {
+    id: 'res-2',
+    title: 'Delta Airline eCredit',
+    category: 'Travel Credits',
+    cost: 350.00,
+    billingCycle: 'Voucher',
+    renewalDate: new Date(Date.now() + 86400000 * 14).toISOString().split('T')[0],
+    autoRenew: false,
+    businessDeductible: false,
+    tags: ['travel', 'flight', 'voucher'],
+    notes: 'Flight cancellation credit ticket #DL-98231.'
+  },
+  {
+    id: 'res-3',
+    title: 'MacBook Pro M3 Max (64GB)',
+    category: 'Hardware Assets',
+    cost: 3499.00,
+    billingCycle: 'Asset',
+    renewalDate: '2027-12-31',
+    autoRenew: false,
+    businessDeductible: true,
+    tags: ['hardware', 'workstation', 'mac'],
+    notes: 'Primary development rig. Serial: C02X12345.'
+  },
+  {
+    id: 'res-4',
+    title: 'Adobe Creative Cloud',
+    category: 'Subscriptions',
+    cost: 54.99,
+    billingCycle: 'Monthly',
+    renewalDate: new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0],
+    autoRenew: true,
+    businessDeductible: true,
+    tags: ['design', 'graphics', 'saas'],
+    notes: 'Photoshop, Illustrator & Premiere suite.'
+  }
+];
 
 // Initial default high-quality glassmorphic seed data if empty
 const DEFAULT_NOTES = [
@@ -151,24 +203,26 @@ export const getInitialData = () => {
   const notes = loadLocalStore(STORAGE_KEYS.NOTES, DEFAULT_NOTES);
   const tasks = loadLocalStore(STORAGE_KEYS.TASKS, DEFAULT_TASKS);
   const prompts = loadLocalStore(STORAGE_KEYS.PROMPTS, DEFAULT_PROMPTS);
+  const resources = loadLocalStore(STORAGE_KEYS.RESOURCES, DEFAULT_RESOURCES);
   const settings = loadLocalStore(STORAGE_KEYS.SETTINGS, {
-    activeDeviceMode: 'desktop', // desktop, tablet, mobile, watch
+    activeDeviceMode: 'desktop',
     themeGlow: 'cyan',
     soundEffects: false,
     autoBackupEnabled: true,
   });
 
-  return { notes, tasks, prompts, settings };
+  return { notes, tasks, prompts, resources, settings };
 };
 
 export const exportFullBackup = () => {
   const data = {
     appName: 'Neon Brain',
-    version: '1.0.0',
+    version: '1.5.0',
     exportDate: new Date().toISOString(),
     notes: loadLocalStore(STORAGE_KEYS.NOTES, DEFAULT_NOTES),
     tasks: loadLocalStore(STORAGE_KEYS.TASKS, DEFAULT_TASKS),
     prompts: loadLocalStore(STORAGE_KEYS.PROMPTS, DEFAULT_PROMPTS),
+    resources: loadLocalStore(STORAGE_KEYS.RESOURCES, DEFAULT_RESOURCES),
     settings: loadLocalStore(STORAGE_KEYS.SETTINGS, {}),
   };
   
@@ -187,6 +241,7 @@ export const importFullBackup = (jsonData) => {
     if (parsed.notes) saveLocalStore(STORAGE_KEYS.NOTES, parsed.notes);
     if (parsed.tasks) saveLocalStore(STORAGE_KEYS.TASKS, parsed.tasks);
     if (parsed.prompts) saveLocalStore(STORAGE_KEYS.PROMPTS, parsed.prompts);
+    if (parsed.resources) saveLocalStore(STORAGE_KEYS.RESOURCES, parsed.resources);
     if (parsed.settings) saveLocalStore(STORAGE_KEYS.SETTINGS, parsed.settings);
     return true;
   } catch (err) {

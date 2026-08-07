@@ -10,7 +10,8 @@ import {
   Tablet, 
   Monitor, 
   Download,
-  Bell
+  Bell,
+  CreditCard
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -26,6 +27,7 @@ export default function Navbar({
     { id: 'brain', label: 'Second Brain', icon: Brain, color: 'text-cyan-400' },
     { id: 'tasks', label: 'Task Center', icon: CheckSquare, color: 'text-emerald-400' },
     { id: 'prompts', label: 'AI Prompt Vault', icon: Sparkles, color: 'text-pink-400' },
+    { id: 'resources', label: 'Resource Hub', icon: CreditCard, color: 'text-purple-400' },
     { id: 'watch', label: 'Watch Mode', icon: Watch, color: 'text-amber-400' },
   ];
 

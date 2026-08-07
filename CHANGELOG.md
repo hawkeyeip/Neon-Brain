@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.0] - 2026-08-07
+
+### Added
+- **💳 Resource Hub Integration (`ResourceTracker.jsx`)**:
+  - Integrated your Antigravity Resource & Subscription Tracker directly into Neon Brain as a core module.
+  - **Financial Run-Rate Analytics**: Real-time monthly SaaS spend ($/mo), annual run-rate ($/yr), available travel credits, and business tax write-off deductions.
+  - **Asset Categories**: Subscriptions, Travel Credits & Vouchers, Hardware Assets, and Software Licenses.
+  - **Cross-System Duty Sync**: 1-Click `⚡ Sync Duty to Task Center` button to automatically create renewal task reminders and calendar deadlines in Task Center!
+  - Added `resources` data model to `db.js` with full JSON backup import/export support.
+
+---
+
 ## [1.4.0] - 2026-08-07
 
 ### Added

@@ -5,13 +5,14 @@ import ThoughtVault from './components/ThoughtVault';
 import TaskCenter from './components/TaskCenter';
 import PromptVault from './components/PromptVault';
 import WatchCompanionView from './components/WatchCompanionView';
+import ResourceTracker from './components/ResourceTracker';
 import QuickCaptureModal from './components/QuickCaptureModal';
 import DataBackupModal from './components/DataBackupModal';
 import NotificationSettingsModal from './components/NotificationSettingsModal';
 import { getInitialData, saveLocalStore } from './services/db';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('brain'); // brain, tasks, prompts, watch
+  const [activeTab, setActiveTab] = useState('brain'); // brain, tasks, prompts, resources, watch
   const [deviceMode, setDeviceMode] = useState('desktop'); // desktop, tablet, mobile, watch
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false);
   const [isBackupModalOpen, setIsBackupModalOpen] = useState(false);
@@ -22,6 +23,7 @@ export default function App() {
   const [notes, setNotes] = useState(initial.notes);
   const [tasks, setTasks] = useState(initial.tasks);
   const [prompts, setPrompts] = useState(initial.prompts);
+  const [resources, setResources] = useState(initial.resources || []);
 
   // Auto-sync state to localStorage whenever modified
   useEffect(() => {
@@ -35,6 +37,10 @@ export default function App() {
   useEffect(() => {
     saveLocalStore('neon_brain_prompts_v1', prompts);
   }, [prompts]);
+
+  useEffect(() => {
+    saveLocalStore('neon_brain_resources_v1', resources);
+  }, [resources]);
 
   // Global Cmd+K / Ctrl+K listener
   useEffect(() => {
@@ -103,6 +109,14 @@ export default function App() {
           <PromptVault
             prompts={prompts}
             setPrompts={setPrompts}
+          />
+        )}
+
+        {activeTab === 'resources' && (
+          <ResourceTracker
+            resources={resources}
+            setResources={setResources}
+            onSyncTaskDuty={(newTaskDuty) => setTasks(prev => [newTaskDuty, ...prev])}
           />
         )}
 
