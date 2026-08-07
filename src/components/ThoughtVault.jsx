@@ -158,13 +158,23 @@ export default function ThoughtVault({ notes, setNotes, onNewNote }) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {sortedNotes.map((note) => {
-            const glowClass = note.color === 'magenta' 
-              ? 'border-pink-500/30 hover:border-pink-400/60' 
-              : note.color === 'emerald' 
-              ? 'border-emerald-500/30 hover:border-emerald-400/60' 
-              : note.color === 'amber'
-              ? 'border-amber-500/30 hover:border-amber-400/60'
-              : 'border-cyan-500/30 hover:border-cyan-400/60';
+            const glowClass = 
+              note.color === 'magenta' ? 'card-glow-magenta' :
+              note.color === 'emerald' ? 'card-glow-emerald' :
+              note.color === 'amber' ? 'card-glow-amber' :
+              note.color === 'violet' ? 'card-glow-violet' :
+              note.color === 'crimson' ? 'card-glow-crimson' :
+              note.color === 'ice' ? 'card-glow-ice' :
+              'card-glow-cyan';
+
+            const categoryBadge = 
+              note.color === 'magenta' ? 'bg-pink-500/10 text-pink-300 border-pink-500/30' :
+              note.color === 'emerald' ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30' :
+              note.color === 'amber' ? 'bg-amber-500/10 text-amber-300 border-amber-500/30' :
+              note.color === 'violet' ? 'bg-purple-500/10 text-purple-300 border-purple-500/30' :
+              note.color === 'crimson' ? 'bg-rose-500/10 text-rose-300 border-rose-500/30' :
+              note.color === 'ice' ? 'bg-sky-500/10 text-sky-300 border-sky-500/30' :
+              'bg-cyan-500/10 text-cyan-300 border-cyan-500/30';
 
             return (
               <div
@@ -174,7 +184,7 @@ export default function ThoughtVault({ notes, setNotes, onNewNote }) {
                 {/* Top Bar: Category & Pin */}
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-900/90 text-cyan-400 border border-cyan-500/30 font-mono">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold border font-mono ${categoryBadge}`}>
                       <Folder className="w-3 h-3 mr-1" />
                       {note.category}
                     </span>
@@ -293,12 +303,15 @@ export default function ThoughtVault({ notes, setNotes, onNewNote }) {
                   <select
                     name="color"
                     defaultValue={editingNote?.color || 'cyan'}
-                    className="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
+                    className="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-500 font-medium"
                   >
-                    <option value="cyan">Neon Cyan</option>
-                    <option value="magenta">Neon Pink</option>
-                    <option value="emerald">Neon Emerald</option>
-                    <option value="amber">Neon Amber</option>
+                    <option value="cyan">🩵 Neon Cyan</option>
+                    <option value="magenta">🩷 Neon Pink</option>
+                    <option value="emerald">💚 Neon Emerald</option>
+                    <option value="amber">💛 Neon Gold / Amber</option>
+                    <option value="violet">💜 Neon Violet / Purple</option>
+                    <option value="crimson">❤️ Neon Crimson / Red</option>
+                    <option value="ice">❄️ Neon Ice Blue</option>
                   </select>
                 </div>
               </div>

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.0.2] - 2026-08-07
+
+### Fixed & Enhanced
+- **Dynamic Neon Card Glows**: Fixed issue where card hover glows defaulted to cyan regardless of selected color accent.
+- **Expanded Neon Palette**: Added 7 distinct neon color accent themes for Second Brain cards:
+  - 🩵 **Neon Cyan**
+  - 🩷 **Neon Pink / Magenta**
+  - 💚 **Neon Emerald**
+  - 💛 **Neon Gold / Amber**
+  - 💜 **Neon Violet / Purple**
+  - ❤️ **Neon Crimson / Red**
+  - ❄️ **Neon Ice Blue**
+- Updated note category badges to dynamically mirror card accent colors.
+
+---
+
 ## [1.0.1] - 2026-08-07
 
 ### Fixed

@@ -40,9 +40,64 @@
 }
 
 .glass-card:hover {
-  border-color: rgba(0, 243, 255, 0.35);
   transform: translateY(-2px);
-  box-shadow: 0 14px 40px rgba(0, 243, 255, 0.15);
+}
+
+/* Dynamic Color Specific Card Glows */
+.card-glow-cyan {
+  border-color: rgba(0, 243, 255, 0.25);
+}
+.card-glow-cyan:hover {
+  border-color: rgba(0, 243, 255, 0.6);
+  box-shadow: 0 12px 35px rgba(0, 243, 255, 0.25);
+}
+
+.card-glow-magenta {
+  border-color: rgba(255, 0, 127, 0.25);
+}
+.card-glow-magenta:hover {
+  border-color: rgba(255, 0, 127, 0.6);
+  box-shadow: 0 12px 35px rgba(255, 0, 127, 0.25);
+}
+
+.card-glow-emerald {
+  border-color: rgba(0, 255, 157, 0.25);
+}
+.card-glow-emerald:hover {
+  border-color: rgba(0, 255, 157, 0.6);
+  box-shadow: 0 12px 35px rgba(0, 255, 157, 0.25);
+}
+
+.card-glow-amber {
+  border-color: rgba(255, 183, 0, 0.25);
+}
+.card-glow-amber:hover {
+  border-color: rgba(255, 183, 0, 0.6);
+  box-shadow: 0 12px 35px rgba(255, 183, 0, 0.25);
+}
+
+.card-glow-violet {
+  border-color: rgba(157, 0, 255, 0.25);
+}
+.card-glow-violet:hover {
+  border-color: rgba(157, 0, 255, 0.6);
+  box-shadow: 0 12px 35px rgba(157, 0, 255, 0.25);
+}
+
+.card-glow-crimson {
+  border-color: rgba(255, 40, 80, 0.25);
+}
+.card-glow-crimson:hover {
+  border-color: rgba(255, 40, 80, 0.6);
+  box-shadow: 0 12px 35px rgba(255, 40, 80, 0.25);
+}
+
+.card-glow-ice {
+  border-color: rgba(56, 189, 248, 0.25);
+}
+.card-glow-ice:hover {
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow: 0 12px 35px rgba(56, 189, 248, 0.25);
 }
 
 /* Glowing Neon Accent Borders & Shadows */
@@ -57,23 +112,8 @@
 }
 
 .glow-border-emerald {
-  border-color: rgba(0, ff, 157, 0.4);
+  border-color: rgba(0, 255, 157, 0.4);
   box-shadow: 0 0 15px rgba(0, 255, 157, 0.25), inset 0 0 10px rgba(0, 255, 157, 0.1);
-}
-
-.glow-text-cyan {
-  color: var(--neon-cyan);
-  text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-}
-
-.glow-text-magenta {
-  color: var(--neon-magenta);
-  text-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
-}
-
-.glow-text-emerald {
-  color: var(--neon-emerald);
-  text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
 }
 
 /* Neon Pill Buttons */
