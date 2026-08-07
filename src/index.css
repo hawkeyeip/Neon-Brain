@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-dark: #070913;
+    --neon-cyan: #00f3ff;
+    --neon-magenta: #ff007f;
+    --neon-purple: #9d00ff;
+    --neon-emerald: #00ff9d;
+    --neon-amber: #ffb700;
+    --glass-bg: rgba(15, 23, 42, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.12);
+  }
+
+  body {
+    background-color: var(--bg-dark);
+    color: #f1f5f9;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+}
+
+/* Custom Glassmorphism Utility Classes */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+}
+
+.glass-card {
+  background: rgba(20, 30, 55, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(0, 243, 255, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(0, 243, 255, 0.15);
+}
+
+/* Glowing Neon Accent Borders & Shadows */
+.glow-border-cyan {
+  border-color: rgba(0, 243, 255, 0.4);
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.25), inset 0 0 10px rgba(0, 243, 255, 0.1);
+}
+
+.glow-border-magenta {
+  border-color: rgba(255, 0, 127, 0.4);
+  box-shadow: 0 0 15px rgba(255, 0, 127, 0.25), inset 0 0 10px rgba(255, 0, 127, 0.1);
+}
+
+.glow-border-emerald {
+  border-color: rgba(0, ff, 157, 0.4);
+  box-shadow: 0 0 15px rgba(0, 255, 157, 0.25), inset 0 0 10px rgba(0, 255, 157, 0.1);
+}
+
+.glow-text-cyan {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+}
+
+.glow-text-magenta {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+}
+
+.glow-text-emerald {
+  color: var(--neon-emerald);
+  text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+}
+
+/* Neon Pill Buttons */
+.btn-neon-cyan {
+  background: linear-gradient(135deg, rgba(0, 243, 255, 0.2), rgba(0, 150, 255, 0.2));
+  border: 1px solid rgba(0, 243, 255, 0.5);
+  color: #00f3ff;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.btn-neon-cyan:hover {
+  background: linear-gradient(135deg, rgba(0, 243, 255, 0.35), rgba(0, 150, 255, 0.35));
+  box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
+}
+
+.btn-neon-magenta {
+  background: linear-gradient(135deg, rgba(255, 0, 127, 0.2), rgba(157, 0, 255, 0.2));
+  border: 1px solid rgba(255, 0, 127, 0.5);
+  color: #ff007f;
+  box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
+  transition: all 0.2s ease;
+}
+
+.btn-neon-magenta:hover {
+  background: linear-gradient(135deg, rgba(255, 0, 127, 0.35), rgba(157, 0, 255, 0.35));
+  box-shadow: 0 0 25px rgba(255, 0, 127, 0.4);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(10, 15, 30, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 243, 255, 0.3);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 243, 255, 0.6);
+}
+
+/* Pulse Keyframes */
+@keyframes neonPulse {
+  0%, 100% {
+    opacity: 0.8;
+    filter: drop-shadow(0 0 8px rgba(0, 243, 255, 0.6));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 16px rgba(0, 243, 255, 0.9));
+  }
+}
+
+.animate-neon-pulse {
+  animation: neonPulse 3s infinite ease-in-out;
+}
+
+/* Watch Simulator Container */
+.watch-bezel {
+  width: 340px;
+  height: 380px;
+  border-radius: 48px;
+  background: #000000;
+  border: 4px solid #1e293b;
+  box-shadow: 0 0 50px rgba(0, 243, 255, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.watch-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 44px;
+  padding: 16px;
+  background: radial-gradient(circle at top right, rgba(0, 243, 255, 0.15), transparent 70%),
+              radial-gradient(circle at bottom left, rgba(255, 0, 127, 0.15), #060913 80%);
+}

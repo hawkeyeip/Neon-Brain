@@ -1,0 +1,16 @@
+{
+  "short_name": "Neon Brain",
+  "name": "Neon Brain - Second Brain & AI Prompt Vault",
+  "description": "Local-first glassmorphic second brain, task command center, and AI prompt engineering vault.",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#070913",
+  "background_color": "#070913"
+}
