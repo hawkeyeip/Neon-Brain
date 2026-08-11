@@ -11,7 +11,8 @@ import {
   Monitor, 
   Download,
   Bell,
-  CreditCard
+  CreditCard,
+  Palette
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -19,9 +20,11 @@ export default function Navbar({
   setActiveTab, 
   deviceMode, 
   setDeviceMode,
+  currentTheme,
   onOpenQuickCapture,
   onOpenBackupModal,
-  onOpenNotificationModal
+  onOpenNotificationModal,
+  onOpenThemeModal
 }) {
   const navTabs = [
     { id: 'brain', label: 'Second Brain', icon: Brain, color: 'text-cyan-400' },
@@ -102,6 +105,19 @@ export default function Navbar({
             <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-cyan-950/80 rounded border border-cyan-500/30 text-cyan-300">
               ⌘K
             </kbd>
+          </button>
+
+          {/* Theme Selector Engine Button */}
+          <button
+            onClick={onOpenThemeModal}
+            className="p-2 rounded-xl bg-slate-800/70 border border-white/10 hover:border-pink-500/40 text-slate-300 hover:text-pink-300 transition-colors relative"
+            title="Dark Neon Theme Engine"
+          >
+            <Palette className="w-4 h-4" />
+            <span 
+              className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border border-slate-900 shadow-sm"
+              style={{ backgroundColor: currentTheme?.primary || '#00f3ff' }}
+            />
           </button>
 
           {/* Notification Settings Button */}

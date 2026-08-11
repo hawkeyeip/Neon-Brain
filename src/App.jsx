@@ -9,7 +9,9 @@ import ResourceTracker from './components/ResourceTracker';
 import QuickCaptureModal from './components/QuickCaptureModal';
 import DataBackupModal from './components/DataBackupModal';
 import NotificationSettingsModal from './components/NotificationSettingsModal';
+import ThemeSelectorModal from './components/ThemeSelectorModal';
 import { getInitialData, saveLocalStore } from './services/db';
+import { getSavedTheme, applyTheme } from './services/themeService';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('brain'); // brain, tasks, prompts, resources, watch
@@ -17,6 +19,19 @@ export default function App() {
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false);
   const [isBackupModalOpen, setIsBackupModalOpen] = useState(false);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState(() => getSavedTheme());
+
+  // Initialize active theme on mount
+  useEffect(() => {
+    const active = applyTheme(currentTheme.id);
+    setCurrentTheme(active);
+  }, []);
+
+  const handleSelectTheme = (themeId) => {
+    const updated = applyTheme(themeId);
+    setCurrentTheme(updated);
+  };
 
   // Load persistent local data
   const initial = getInitialData();
@@ -80,9 +95,11 @@ export default function App() {
         setActiveTab={setActiveTab}
         deviceMode={deviceMode}
         setDeviceMode={setDeviceMode}
+        currentTheme={currentTheme}
         onOpenQuickCapture={() => setIsQuickCaptureOpen(true)}
         onOpenBackupModal={() => setIsBackupModalOpen(true)}
         onOpenNotificationModal={() => setIsNotificationModalOpen(true)}
+        onOpenThemeModal={() => setIsThemeModalOpen(true)}
       />
 
       {/* Main App Workspace */}
@@ -158,6 +175,14 @@ export default function App() {
         onClose={() => setIsNotificationModalOpen(false)}
         notes={notes}
         prompts={prompts}
+      />
+
+      {/* Dark Neon Theme Engine Selector Modal */}
+      <ThemeSelectorModal
+        isOpen={isThemeModalOpen}
+        onClose={() => setIsThemeModalOpen(false)}
+        currentTheme={currentTheme}
+        onSelectTheme={handleSelectTheme}
       />
 
     </div>

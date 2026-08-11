@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.0] - 2026-08-11
+
+### Added & Updated
+- **🎨 Dark Neon Theme Engine (`themeService.js`, `ThemeSelectorModal.jsx`)**:
+  - Integrated high-contrast cyberpunk color matrix with 5 themes: **Cyber Cyan**, **Matrix Green**, **Synth Purple**, **Solar Amber**, and **Ice Blue**.
+  - **Dynamic CSS Root Injection**: Inject CSS variables (`--neon-cyan`, `--neon-magenta`, `--bg-dark`, `--glass-bg`, `--theme-glow`) seamlessly across components.
+  - **Persistent Selection**: Choice saved across reloads in `localStorage` (`neon_brain_theme_v1`).
+  - **Real-Time Particle Canvas Integration (`AmbientCanvas.jsx`)**: Neural particles adapt colors and glowing beam connections dynamically based on active theme.
+  - **Palette Button in Navbar (`Navbar.jsx`)**: Quick access button with live active theme indicator dot.
+- **📂 Workspace Relocation**:
+  - Relocated codebase from temporary scratch paths to standard workspace directory: [`/Users/brandonheisey/Projects/neon-brain`](file:///Users/brandonheisey/Projects/neon-brain).
+
+---
+
 ## [2.0.1] - 2026-08-07
 
 ### Preserved
