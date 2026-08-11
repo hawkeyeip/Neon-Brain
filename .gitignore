@@ -35,3 +35,9 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Cache & Coverage
+.cache
+.vite
+coverage
+
